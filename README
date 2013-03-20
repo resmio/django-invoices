@@ -21,7 +21,7 @@ Usage
     from invoices import create_invoice
 
     invoice = create_invoice(
-        user = someuser, begin_date, end_date, currency='EUR', country='de',
+        begin_date, end_date, currency='EUR', country='de', user=some_user,
         items=[{
             'name': 'Customer name',
             'lineItemGroups': [('plan_identifier', 'plan description', [
