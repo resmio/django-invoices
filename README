@@ -1,0 +1,55 @@
+===============
+django-invoices
+===============
+
+A Django app for creating invoices for multi metered billing.
+
+Requirements
+============
+
+Required
+--------
+
+* Python 2.6+
+* Django 1.4+
+
+Usage
+=====
+
+::
+
+    from invoices import create_invoice
+
+    invoice = create_invoice(
+        user = someuser, begin_date, end_date, currency='EUR', country='de',
+        items=[{
+            'name': 'Customer name',
+            'lineItemGroups': [('plan_identifier', 'plan description', [
+                ('line item description', Decimal(25.50), line_item_date)
+            ])],
+        }, {
+            'name': 'Big corp bakery',
+            'lineItemGroups': [('standard', '$2 per cookie delivered', [
+                ('3x delicious cookie', Decimal(6), somedate)
+            ])]
+        },
+    ])
+
+Signals
+========
+
+* 'invoice_ready'
+
+::
+
+    from invoices.signals import invoice_ready
+    from invoices.models import Invoice
+
+    def on_invoice_ready(sender, **kwargs):
+        invoice = kwargs['invoice']
+        # send invoice notification to user
+        # ...
+        # charge the users account
+        # ...
+
+    invoice_ready.connect(on_invoice_ready)
