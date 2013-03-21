@@ -43,7 +43,7 @@ Usage
 
         from invoices import cancel_invoice
 
-        cancelled_invoice = cancel_invoice(existing_invoice)
+        cancelled_invoice = cancel_invoice(invoice)
 
 
 Signals
