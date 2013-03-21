@@ -3,6 +3,7 @@ from django import forms
 from django.utils.translation import ugettext, ungettext, ugettext_lazy as _
 
 from invoices.models import Invoice, Item, LineItem
+from invoices import cancel_invoice
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -19,25 +20,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     def cancel_invoices(self, request, queryset):
 
         for invoice in queryset:
-            cancelled_invoice = Invoice.objects.create(
-                cancels=invoice,
-                user=invoice.user,
-                begins=invoice.begins,
-                ends=invoice.ends,
-                due_date=invoice.due_date,
-                is_paid=invoice.is_paid,
-                currency=invoice.currency,
-                name=invoice.name,
-                company=invoice.company,
-                address1=invoice.address1,
-                address2=invoice.address2,
-                city=invoice.city,
-                zip_code=invoice.zip_code,
-                country=invoice.country
-            )
-
-            # this will update total amounts on the invoice
-            cancelled_invoice.calculate()
+            cancel_invoice(invoice)
 
         message = ungettext("successfully cancelled %(count)d invoice",
             "successfully cancelled %(count)d invoices", queryset.count()) % {'count': queryset.count()}

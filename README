@@ -16,24 +16,35 @@ Required
 Usage
 =====
 
-::
+    Create a new invoice
 
-    from invoices import create_invoice
+    ::
 
-    invoice = create_invoice(
-        begin_date, end_date, currency='EUR', country='de', user=some_user,
-        items=[{
-            'name': 'Customer name',
-            'lineItemGroups': [('plan_identifier', 'plan description', [
-                ('line item description', Decimal(25.50), line_item_date)
-            ])],
-        }, {
-            'name': 'Big corp bakery',
-            'lineItemGroups': [('standard', '$2 per cookie delivered', [
-                ('3x delicious cookie', Decimal(6), somedate)
-            ])]
-        },
-    ])
+        from invoices import create_invoice
+
+        invoice = create_invoice(
+            begin_date, end_date, currency='EUR', country='de', user=some_user,
+            items=[{
+                'name': 'Customer name',
+                'lineItemGroups': [('plan_identifier', 'plan description', [
+                    ('line item description', Decimal(25.50), line_item_date)
+                ])],
+            }, {
+                'name': 'Big corp bakery',
+                'lineItemGroups': [('standard', '$2 per cookie delivered', [
+                    ('3x delicious cookie', Decimal(6), somedate)
+                ])]
+            },
+        ])
+
+    Cancel an existing invoice (creates a new invoice with the negative amount)
+
+    ::
+
+        from invoices import cancel_invoice
+
+        cancelled_invoice = cancel_invoice(existing_invoice)
+
 
 Signals
 ========

@@ -7,8 +7,6 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 
-from django_countries.countries import COUNTRIES as COUNTRY_CHOICES
-
 from invoices.signals import invoice_ready
 
 class Invoice(models.Model):
@@ -30,7 +28,7 @@ class Invoice(models.Model):
     address2 = models.CharField(max_length=512, verbose_name=_('Address 2'), blank=True)
     city = models.CharField(max_length=256, verbose_name=_('City'), blank=True)
     zip_code = models.CharField(max_length=128, verbose_name=_('Zip code'), blank=True)
-    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, verbose_name=_('Country'), blank=True)
+    country = models.CharField(max_length=2, verbose_name=_('Country'), blank=True)
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"), help_text=_('Without VAT'))
     vat_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"))
     total_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"), help_text=_('Including VAT'))
@@ -71,6 +69,7 @@ class Invoice(models.Model):
 
         if not silent:
             invoice_ready.send(sender=self, invoice=self)
+        return self
 
     def get_absolute_url(self):
         return reverse('invoice_detail', kwargs={'pk': self.pk})

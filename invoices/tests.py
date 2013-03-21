@@ -1,16 +1,16 @@
 from decimal import Decimal
-
 from datetime import date, datetime
 
 from django import test
 
-from invoices import create_invoice
+from invoices import create_invoice, cancel_invoice
+
 
 class InvoiceTestCase(test.TestCase):	
 
-    def test_create_invoice(self):
+    def test_invoice(self):
         """
-        Test creating an invoice
+        Test creating and cancelling an invoice
 
         """
         invoice = create_invoice(
@@ -28,3 +28,7 @@ class InvoiceTestCase(test.TestCase):
         ])
         self.assertEquals(invoice.total_amount, Decimal("2.38"))
         self.assertEquals(invoice.is_paid, False)
+
+        # then cancel the created invoice
+        cancelled_invoice = cancel_invoice(invoice)
+        self.assertEquals(cancelled_invoice.total_amount, Decimal("-2.38"))
