@@ -30,6 +30,8 @@ class Invoice(models.Model):
     zip_code = models.CharField(max_length=128, verbose_name=_('Zip code'), blank=True)
     country = models.CharField(max_length=2, verbose_name=_('Country'), blank=True)
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"), help_text=_('Without VAT'))
+    credit = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Credit'), default=Decimal("0.0"), help_text=_("Add credit"))
+    credit_reason = models.TextField(verbose_name="Reason for credit", blank=True)
     vat_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"))
     total_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"), help_text=_('Including VAT'))
     vat = models.PositiveIntegerField(verbose_name=_('VAT'), default=19)
@@ -52,6 +54,7 @@ class Invoice(models.Model):
                 self.amount += i.total_amount
                 for item_group in item.line_item_groups.all():
                     LineItemGroup.objects.create(item=i, item_type=item_group.item_type, amount=-item_group.amount, description=item_group.description)
+            self.amount += self.credit
         else:
             # regular invoice
             for item in self.items.all():
@@ -61,6 +64,7 @@ class Invoice(models.Model):
                 item.total_amount = item.line_item_groups.aggregate(Sum('amount'))['amount__sum'] or Decimal("0.0")
                 item.save()
                 self.amount += item.total_amount
+            self.amount -= self.credit
 
         # add vat
         self.vat_amount = self.amount * Decimal(self.vat / 100).quantize(Decimal('1.00'))
