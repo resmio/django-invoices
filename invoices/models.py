@@ -55,6 +55,11 @@ class Invoice(models.Model):
                 for item_group in item.line_item_groups.all():
                     LineItemGroup.objects.create(item=i, item_type=item_group.item_type, amount=-item_group.amount, description=item_group.description)
             self.amount += self.credit
+
+            # for cancelleations set both invoices to status paid
+            self.cancels.is_paid = True
+            self.cancels.save()
+            self.is_paid = True
         else:
             # regular invoice
             for item in self.items.all():
