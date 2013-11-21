@@ -6,7 +6,6 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
-from django
 
 from invoices.signals import invoice_ready
 
