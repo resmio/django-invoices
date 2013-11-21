@@ -9,7 +9,7 @@ except ImportError:
 
 setup(
     name='django-invoices',
-    version='0.0.1-alpha',
+    version='0.0.2-alpha',
     description='Invoices for multimetered billing',
     author='Niels Sandholt Busch',
     author_email='niels.busch@gmail.com',
@@ -19,7 +19,7 @@ setup(
         'invoices',
     ],
     requires=[
-        'django(>=1.4)',
+        'django(>=1.6)',
     ],
     install_requires=[
     ],
