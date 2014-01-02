@@ -1,7 +1,7 @@
 from __future__ import division
 from decimal import Decimal
 
-from django.db import models, transaction
+from django.db import models
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -47,36 +47,34 @@ class Invoice(models.Model):
 
     def calculate(self, silent=False):
 
-        with transaction.atomic():
-            if self.cancels:
-                # cancellation of existing invoice
-                for item in self.cancels.items.all():
-                    i = Item.objects.create(invoice=self, name=item.name, total_amount = -item.total_amount)
-                    self.amount += i.total_amount
-                    for item_group in item.line_item_groups.all():
-                        LineItemGroup.objects.create(item=i, item_type=item_group.item_type, amount=-item_group.amount, description=item_group.description)
-                self.amount += self.credit
+        if self.cancels:
+            # cancellation of existing invoice
+            for item in self.cancels.items.all():
+                i = Item.objects.create(invoice=self, name=item.name, total_amount = -item.total_amount)
+                self.amount += i.total_amount
+                for item_group in item.line_item_groups.all():
+                    LineItemGroup.objects.create(item=i, item_type=item_group.item_type, amount=-item_group.amount, description=item_group.description)
+            self.amount += self.credit
 
-                # for cancelleations set both invoices to status paid
-                self.cancels.is_paid = True
-                self.cancels.save()
-                self.is_paid = True
-            else:
-                # regular invoice
-                for item in self.items.all():
-                    for item_group in item.line_item_groups.all():
-                        item_group.amount = item_group.line_items.aggregate(Sum('amount'))['amount__sum'] or Decimal("0.0")
-                        item_group.save()
-                    item.total_amount = item.line_item_groups.aggregate(Sum('amount'))['amount__sum'] or Decimal("0.0")
-                    item.save()
-                    self.amount += item.total_amount
-                self.amount -= self.credit
+            # for cancelleations set both invoices to status paid
+            self.cancels.is_paid = True
+            self.cancels.save()
+            self.is_paid = True
+        else:
+            # regular invoice
+            for item in self.items.all():
+                for item_group in item.line_item_groups.all():
+                    item_group.amount = item_group.line_items.aggregate(Sum('amount'))['amount__sum'] or Decimal("0.0")
+                    item_group.save()
+                item.total_amount = item.line_item_groups.aggregate(Sum('amount'))['amount__sum'] or Decimal("0.0")
+                item.save()
+                self.amount += item.total_amount
+            self.amount -= self.credit
 
-            # add vat
-            self.vat_amount = self.amount * Decimal(self.vat / 100).quantize(Decimal('1.00'))
-            self.total_amount = self.amount + self.vat_amount
-            self.save()
-            transaction.commit()
+        # add vat
+        self.vat_amount = self.amount * Decimal(self.vat / 100).quantize(Decimal('1.00'))
+        self.total_amount = self.amount + self.vat_amount
+        self.save()
 
         if not silent:
             invoice_ready.send(sender=self, invoice=self)
