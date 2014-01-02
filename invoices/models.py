@@ -76,6 +76,7 @@ class Invoice(models.Model):
             self.vat_amount = self.amount * Decimal(self.vat / 100).quantize(Decimal('1.00'))
             self.total_amount = self.amount + self.vat_amount
             self.save()
+            transaction.commit()
 
         if not silent:
             invoice_ready.send(sender=self, invoice=self)
