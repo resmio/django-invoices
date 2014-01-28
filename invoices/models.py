@@ -84,7 +84,7 @@ class Invoice(models.Model):
         return reverse('invoice_detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
-        return "%s, %s - %s" % (self.user, self.begins, self.ends)
+        return "%d:%s, %s - %s" % (self.pk, self.user, self.begins, self.ends)
 
     class Meta:
         ordering = ['-begins', '-ends',]
@@ -100,7 +100,7 @@ class Item(models.Model):
         decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"))
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u'%d:%s' % (self.pk, self.name)
 
 class LineItemType(models.Model):
     """
@@ -112,7 +112,7 @@ class LineItemType(models.Model):
     description = models.CharField(max_length=512, blank=True)
 
     def __unicode__(self):
-        return u'%s' % self.identifier
+        return u'%d:%s' % (self.pk, self.identifier)
 
 class LineItemGroup(models.Model):
     """
@@ -125,7 +125,7 @@ class LineItemGroup(models.Model):
     description = models.CharField(max_length=256, blank=True)
 
     def __unicode__(self):
-        return u'%s: %s' % (self.item, self.item_type)
+        return u'%d:%s: %s' % (self.pk, self.item, self.item_type)
 
 class LineItem(models.Model):
     """
@@ -139,4 +139,4 @@ class LineItem(models.Model):
     date = models.DateTimeField(verbose_name=_('Date'))
 
     def __unicode__(self):
-        return self.description
+        return '%d:%s' % (self.pk, self.description)
