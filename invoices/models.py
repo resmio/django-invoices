@@ -84,7 +84,7 @@ class Invoice(models.Model):
         return reverse('invoice_detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
-        return "%d:%s, %s - %s" % (self.pk, self.user, self.begins, self.ends)
+        return "%s, %s - %s" % (self.user, self.begins, self.ends)
 
     class Meta:
         ordering = ['-begins', '-ends',]
