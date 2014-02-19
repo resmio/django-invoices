@@ -52,7 +52,7 @@ class Invoice(models.Model):
         Invoice number of format "YYYYMM0001"
 
         """
-        if self.confirmed:
+        if not self.confirmed:
             raise Exception("Unconfirmed invoices do not have a number")
         return '%d%s%s' % (self.begins.year, unicode(self.begins.month).zfill(2), unicode(self.sequence_number).zfill(4))
 
