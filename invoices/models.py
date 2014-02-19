@@ -9,6 +9,13 @@ from django.core.urlresolvers import reverse
 
 from invoices.signals import invoice_ready
 
+class InvoiceSequenceNumber(models.Model):
+    """
+    Invoice sequence number used internally by the Invoice class
+    to get consecutive sequential numbers for confirmed invoices
+
+    """
+
 class Invoice(models.Model):
     """
     Invoice
@@ -36,6 +43,8 @@ class Invoice(models.Model):
     total_amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Total amount'), default=Decimal("0.0"), help_text=_('Including VAT'))
     vat = models.PositiveIntegerField(verbose_name=_('VAT'), default=19)
     cancels = models.OneToOneField("Invoice", blank=True, null=True)
+    confirmed = models.BooleanField(default=True)
+    sequence_number = models.PositiveIntegerField(null=True)
 
     @property
     def number(self):
@@ -43,7 +52,9 @@ class Invoice(models.Model):
         Invoice number of format "YYYYMM0001"
 
         """
-        return '%d%s%s' % (self.begins.year, unicode(self.begins.month).zfill(2), unicode(self.pk).zfill(4))
+        if not self.confirmed:
+            raise Exception("Unconfirmed invoices do not have a number")
+        return '%d%s%s' % (self.begins.year, unicode(self.begins.month).zfill(2), unicode(self.sequence_number).zfill(4))
 
     def calculate(self, silent=False):
 
@@ -86,6 +97,11 @@ class Invoice(models.Model):
     def __unicode__(self):
         return "%s, %s - %s" % (self.user, self.begins, self.ends)
 
+    def save(self, *args, **kwargs):
+        if self.confirmed and not self.sequence_number:
+            self.sequence_number = InvoiceSequenceNumber.objects.create().pk
+        return super(Invoice, self).save(*args, **kwargs)
+    
     class Meta:
         ordering = ['-begins', '-ends',]
 
