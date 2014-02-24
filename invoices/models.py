@@ -100,6 +100,7 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         if self.confirmed and not self.sequence_number:
             self.sequence_number = InvoiceSequenceNumber.objects.create().pk
+            invoice_confirmed.send(sender=self, invoice=self)
         return super(Invoice, self).save(*args, **kwargs)
     
     class Meta:
