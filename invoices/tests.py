@@ -35,7 +35,7 @@ class InvoiceTestCase(test.TestCase):
 
     def test_sequence_number(self):
         begins = date(2014, 1, 2)
-        def create_invoice():
+        def create():
             return create_invoice(
                 begins, date.today(), currency='EUR', country='de', items=[{
                     'name': 'The fish',
@@ -50,16 +50,16 @@ class InvoiceTestCase(test.TestCase):
                 },
             ])
 
-        invoice1 = create_invoice()
+        invoice1 = create()
 
         self.assertEqual(invoice1.sequence_number, None)
         invoice1.confirmed = True
         invoice1.save()
 
         n0 = invoice1.sequence_number
-        invoice2 = create_invoice()
-        invoice3 = create_invoice()
-        invoice4 = create_invoice()
+        invoice2 = create()
+        invoice3 = create()
+        invoice4 = create()
 
         self.assertEqual(invoice1.sequence_number, None)
         invoice4.confirmed = True
