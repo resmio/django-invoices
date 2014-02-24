@@ -13,8 +13,8 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceAdmin(admin.ModelAdmin):
     form = InvoiceForm
     readonly_fields = ('total_amount',)
-    list_display = ('user', 'begins', 'ends', 'total_amount', 'is_paid')
-    list_filter = ('is_paid',)
+    list_display = ('user', 'begins', 'ends', 'total_amount', 'is_paid', 'confirmed')
+    list_filter = ('is_paid', 'confirmed')
     actions = ['cancel_invoices']
 
     def cancel_invoices(self, request, queryset):
