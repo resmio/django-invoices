@@ -21,7 +21,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     def cancel_invoices(self, request, queryset):
         if queryset.filter(confirmed=False).count():
             message = ugettext("Unconfirmed invoices cannot be cancelled, you can just remove them")
-            messages.error(request, "The message")
+            messages.error(request, message)
             return
 
         for invoice in queryset:
@@ -44,6 +44,3 @@ class InvoiceAdmin(admin.ModelAdmin):
             "successfully confirmed %(count)d invoices", count) % {'count': count}
         self.message_user(request, message)
     confirm_invoices.short_description = _('Confirm selected invoices')
-
-
-
