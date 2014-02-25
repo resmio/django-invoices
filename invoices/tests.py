@@ -2,14 +2,15 @@ from decimal import Decimal
 from datetime import date, datetime
 
 from django import test
+from django.utils import timezone
 
 from invoices import create_invoice, cancel_invoice
+from invoices.signals import invoice_confirmed
 
 
-class InvoiceTestCase(test.TestCase):	
-
+class InvoiceTestCase(test.TestCase):   
     def _create_invoice(self, **kwargs):
-        args = {
+        new_kwargs = {
             'begins': date.today(),
             'ends': date.today(),
             'currency': 'EUR',
@@ -17,18 +18,18 @@ class InvoiceTestCase(test.TestCase):
             'items': [{
                     'name': 'The fish',
                     'lineItemGroups': [('standard', 'hejsa', [
-                        ('line item description', Decimal(1), date.today())
+                        ('line item description', Decimal(1), timezone.now())
                     ])],
                 }, {
                     'name': 'Consulting',
                     'lineItemGroups': [('weekend', 'davs', [
-                        ('7 hours tough work', Decimal(1), date.today())
+                        ('7 hours tough work', Decimal(1), timezone.now())
                     ])]
                 },
             ]
         }
-        args.update(kwargs)
-        return create_invoice(**kwargs)
+        new_kwargs.update(kwargs)
+        return create_invoice(**new_kwargs)
 
     def test_invoice(self):
         """
@@ -59,7 +60,7 @@ class InvoiceTestCase(test.TestCase):
         invoice3 = create()
         invoice4 = create()
 
-        self.assertEquals(invoice1.sequence_number, None)
+        self.assertEquals(invoice4.sequence_number, None)
         invoice4.confirmed = True
         invoice4.save()
         self.assertEquals(invoice4.sequence_number, n0+1)
@@ -78,24 +79,25 @@ class InvoiceTestCase(test.TestCase):
         Test that the invoice_confirmed signal gets emitted correctly
 
         """
-        n_emits = 0
-        def on_invoice_confirmed():
-            n_emits += 1
+        # it is a dict so that it can be modified inside the function
+        counter = {'n_emits': 0}
+        def on_invoice_confirmed(*args, **kwargs):
+            counter['n_emits'] += 1
         invoice_confirmed.connect(on_invoice_confirmed)
 
         invoice = self._create_invoice(confirmed = False)
-        self.assertEquals(n_emits, 0)
+        self.assertEquals(counter['n_emits'], 0)
         invoice.confirmed = True
         invoice.save()
-        self.assertEquals(n_emits, 1)
+        self.assertEquals(counter['n_emits'], 1)
         # only the first confirmation should count
         invoice.confirmed = False
         invoice.save()
         invoice.confirmed = True
         invoice.save()
-        self.assertEquals(n_emits, 1)
+        self.assertEquals(counter['n_emits'], 1)
 
         # invoice confirmed on creation should emit the signal too
         self._create_invoice(confirmed = True)
-        self.assertEquals(n_emits, 2)
+        self.assertEquals(counter['n_emits'], 2)
 

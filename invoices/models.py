@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 
-from invoices.signals import invoice_ready
+from invoices.signals import invoice_ready, invoice_confirmed
 
 class InvoiceSequenceNumber(models.Model):
     """
