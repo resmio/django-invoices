@@ -16,11 +16,11 @@ class InvoiceAdmin(admin.ModelAdmin):
     readonly_fields = ('total_amount', 'confirmed')
     list_display = ('user', 'begins', 'ends', 'total_amount', 'is_paid', 'confirmed')
     list_filter = ('is_paid', 'confirmed')
-    actions = ['cancel_invoices', 'confirm_invoices']
+    actions = ['cancel_invoices', 'confirm_invoices', 'delete_invoices']
 
     def cancel_invoices(self, request, queryset):
         if queryset.filter(confirmed=False).count():
-            message = ugettext("Unconfirmed invoices cannot be cancelled, you can just remove them")
+            message = ugettext("Unconfirmed invoices cannot be cancelled, you can just delete them")
             messages.error(request, message)
             return
 
@@ -44,3 +44,16 @@ class InvoiceAdmin(admin.ModelAdmin):
             "successfully confirmed %(count)d invoices", count) % {'count': count}
         self.message_user(request, message)
     confirm_invoices.short_description = _('Confirm selected invoices')
+
+    def delete_invoices(self, request, queryset):
+        if queryset.filter(confirmed=True).count():
+            message = ugettext("You cannot delete confirmed invoices, create a cancellation instead")
+            messages.error(request, message)
+            return
+        count = 0
+
+        queryset.delete()
+        message = ungettext("successfully deleted %(count)d invoice",
+            "successfully deleted %(count)d invoices", queryset.count()) % {'count': queryset.count()}
+        self.message_user(request, message)
+    delete_invoices.short_description = _('Delete unconfirmed invoices')
