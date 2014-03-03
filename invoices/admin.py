@@ -52,8 +52,9 @@ class InvoiceAdmin(admin.ModelAdmin):
             return
         count = 0
 
+        count = queryset.count()
         queryset.delete()
         message = ungettext("successfully deleted %(count)d invoice",
-            "successfully deleted %(count)d invoices", queryset.count()) % {'count': queryset.count()}
+            "successfully deleted %(count)d invoices", count) % {'count': count}
         self.message_user(request, message)
     delete_invoices.short_description = _('Delete unconfirmed invoices')
