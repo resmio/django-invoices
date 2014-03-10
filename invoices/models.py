@@ -102,10 +102,11 @@ class Invoice(models.Model):
         if self.confirmed and not self.sequence_number:
             self.sequence_number = InvoiceSequenceNumber.objects.create().pk
             confirmed = True
-        return super(Invoice, self).save(*args, **kwargs)
+        ret = super(Invoice, self).save(*args, **kwargs)
         if confirmed:
             # after the call to super to make sure it has been saved to the db
             invoice_confirmed.send(sender=self, invoice=self)
+        return ret
     
     class Meta:
         ordering = ['-begins', '-ends',]
