@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 
-from invoices.signals import invoice_ready
+from invoices.signals import invoice_ready, invoice_confirmed
 
 class InvoiceSequenceNumber(models.Model):
     """
@@ -98,9 +98,14 @@ class Invoice(models.Model):
         return "%s, %s - %s" % (self.user, self.begins, self.ends)
 
     def save(self, *args, **kwargs):
+        confirmed = False
         if self.confirmed and not self.sequence_number:
             self.sequence_number = InvoiceSequenceNumber.objects.create().pk
+            confirmed = True
         return super(Invoice, self).save(*args, **kwargs)
+        if confirmed:
+            # after the call to super to make sure it has been saved to the db
+            invoice_confirmed.send(sender=self, invoice=self)
     
     class Meta:
         ordering = ['-begins', '-ends',]

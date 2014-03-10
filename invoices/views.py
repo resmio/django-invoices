@@ -7,7 +7,7 @@ class InvoiceListView(ListView):
     context_object_name = 'invoice_list'
 
     def get_queryset(self):
-        return Invoice.objects.filter(user=self.request.user)
+        return Invoice.objects.filter(user=self.request.user, confirmed=True)
 
 class InvoiceDetailView(DetailView):
     model = Invoice
