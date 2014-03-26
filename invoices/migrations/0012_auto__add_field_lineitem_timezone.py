@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
                 if li.item_group and li.item_group.item_type.identifier == 'monthly_fee':
                     li.timezone = 'UTC'
                     li.save()
-            except LineItemGroup.DoesNotExist:
+            except orm['invoices.LineItemGroup'].DoesNotExist:
                 # ignore invalid item_groups I have on my local machine
                 pass
 
