@@ -158,6 +158,7 @@ class LineItem(models.Model):
     description = models.CharField(max_length=512, verbose_name=_('Description'))
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Amount'))
     date = models.DateTimeField(verbose_name=_('Date'))
+    timezone = models.CharField(default='UTC', max_length=128)
 
     def __unicode__(self):
         return '%d:%s' % (self.pk, self.description)
