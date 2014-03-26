@@ -3,7 +3,7 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-
+from invoices.models import LineItemGroup
 
 class Migration(SchemaMigration):
 
@@ -12,10 +12,16 @@ class Migration(SchemaMigration):
         db.add_column('invoices_lineitem', 'timezone',
                       self.gf('django.db.models.fields.CharField')(default='Europe/Berlin', max_length=128),
                       keep_default=False)
+
         for li in orm['invoices.LineItem'].objects.all():
-            if li.item_group and li.item_group.item_type.identifier == 'monthly_fee':
-                li.timezone = 'UTC'
-                li.save()
+            try:
+                group = li.item_group
+                if li.item_group and li.item_group.item_type.identifier == 'monthly_fee':
+                    li.timezone = 'UTC'
+                    li.save()
+            except LineItemGroup.DoesNotExist:
+                # ignore invalid item_groups I have on my local machine
+                pass
 
 
     def backwards(self, orm):
