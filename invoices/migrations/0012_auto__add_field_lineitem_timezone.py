@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(default='Europe/Berlin', max_length=128),
                       keep_default=False)
         for li in orm['invoices.LineItem'].objects.all():
-            if li.item_group.item_type.identifier == 'monthly_fee':
+            if li.item_group and li.item_group.item_type.identifier == 'monthly_fee':
                 li.timezone = 'UTC'
                 li.save()
 
