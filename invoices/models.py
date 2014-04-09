@@ -1,5 +1,6 @@
 from __future__ import division
 from decimal import Decimal
+from datetime import date
 
 from django.db import models
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -26,6 +27,7 @@ class Invoice(models.Model):
     updated = models.DateTimeField(verbose_name=_('Updated'), auto_now=True)
     begins = models.DateField(verbose_name=_('Begin'))
     ends = models.DateField(verbose_name=_('End'))
+    invoicing_date = models.DateField(verbose_name=_('Invoicing Date'), null=True, blank=True)
     due_date = models.DateField(verbose_name=_('Due date'), null=True, blank=True)
     is_paid = models.BooleanField(verbose_name=_('Is paid'), default=False)
     currency = models.CharField(max_length=3, default='EUR')
@@ -100,8 +102,10 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         confirmed = False
         if self.confirmed and not self.sequence_number:
-            self.sequence_number = InvoiceSequenceNumber.objects.create().pk
+            # the invoice has been set to confirmed
             confirmed = True
+            self.sequence_number = InvoiceSequenceNumber.objects.create().pk
+            self.invoicing_date = date.today()
         ret = super(Invoice, self).save(*args, **kwargs)
         if confirmed:
             # after the call to super to make sure it has been saved to the db
