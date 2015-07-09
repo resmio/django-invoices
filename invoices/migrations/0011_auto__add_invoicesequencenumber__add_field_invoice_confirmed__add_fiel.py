@@ -23,7 +23,7 @@ class Migration(SchemaMigration):
         db.add_column('invoices_invoice', 'sequence_number',
                       self.gf('django.db.models.fields.PositiveIntegerField')(null=True),
                       keep_default=False)
-        
+
         for invoice in orm['invoices.Invoice'].objects.all():
             invoice.sequence_number = invoice.pk
             invoice.save()
