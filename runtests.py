@@ -37,6 +37,7 @@ if not settings.configured:
         DATABASES=DATABASES,
         INSTALLED_APPS=(
             'django.contrib.contenttypes',
+            'django.contrib.auth',
             'invoices',
         ),
         SITE_ID=1,
