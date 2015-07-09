@@ -11,6 +11,6 @@
     -   id: double-quote-string-fixer
     -   id: flake8
         args:
-        - --exclude=invoices/migrations/*
+        - --exclude=invoices/south_migrations/*,invoices/migrations/*
         - --max-line-length=80
         - --ignore=E226
