@@ -56,6 +56,7 @@ def cancel_invoice(invoice):
         city=invoice.city,
         zip_code=invoice.zip_code,
         country=invoice.country,
-        confirmed=invoice.confirmed
+        confirmed=invoice.confirmed,
+        vat=invoice.vat
     )
     return cancelled_invoice.calculate()
