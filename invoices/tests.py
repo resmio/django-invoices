@@ -1,5 +1,5 @@
 from decimal import Decimal
-from datetime import date, datetime
+from datetime import date
 
 from django import test
 from django.utils import timezone
@@ -8,25 +8,21 @@ from invoices import create_invoice, cancel_invoice
 from invoices.signals import invoice_confirmed
 
 
-class InvoiceTestCase(test.TestCase):   
+class InvoiceTestCase(test.TestCase):
     def _create_invoice(self, **kwargs):
         new_kwargs = {
             'begins': date.today(),
             'ends': date.today(),
             'currency': 'EUR',
             'country': 'de',
-            'items': [{
-                    'name': 'The fish',
-                    'lineItemGroups': [('standard', 'hejsa', [
-                        ('line item description', Decimal(1), timezone.now())
-                    ])],
-                }, {
-                    'name': 'Consulting',
-                    'lineItemGroups': [('weekend', 'davs', [
-                        ('7 hours tough work', Decimal(1), timezone.now())
-                    ])]
-                },
-            ]
+            'items': [{'name': 'The fish',
+                       'lineItemGroups': [('standard', 'hejsa',
+                                           [('line item description',
+                                             Decimal(1), timezone.now())])], },
+                      {'name': 'Consulting',
+                       'lineItemGroups': [('weekend', 'davs',
+                                           [('7 hours tough work',
+                                             Decimal(1), timezone.now())])]}, ]
         }
         new_kwargs.update(kwargs)
         return create_invoice(**new_kwargs)
@@ -37,15 +33,16 @@ class InvoiceTestCase(test.TestCase):
 
         """
         invoice = self._create_invoice()
-        self.assertEquals(invoice.total_amount, Decimal("2.38"))
+        self.assertEquals(invoice.total_amount, Decimal('2.38'))
         self.assertEquals(invoice.is_paid, False)
 
         # then cancel the created invoice
         cancelled_invoice = cancel_invoice(invoice)
-        self.assertEquals(cancelled_invoice.total_amount, Decimal("-2.38"))
+        self.assertEquals(cancelled_invoice.total_amount, Decimal('-2.38'))
 
     def test_sequence_number(self):
         begins = date(2014, 1, 2)
+
         def create():
             return self._create_invoice(begins=begins, confirmed=False)
 
@@ -56,8 +53,8 @@ class InvoiceTestCase(test.TestCase):
         invoice1.save()
 
         n0 = invoice1.sequence_number
-        invoice2 = create()
-        invoice3 = create()
+        create()
+        create()
         invoice4 = create()
 
         self.assertEquals(invoice4.sequence_number, None)
@@ -81,11 +78,12 @@ class InvoiceTestCase(test.TestCase):
         """
         # it is a dict so that it can be modified inside the function
         counter = {'n_emits': 0}
+
         def on_invoice_confirmed(*args, **kwargs):
             counter['n_emits'] += 1
         invoice_confirmed.connect(on_invoice_confirmed)
 
-        invoice = self._create_invoice(confirmed = False)
+        invoice = self._create_invoice(confirmed=False)
         self.assertEquals(counter['n_emits'], 0)
         invoice.confirmed = True
         invoice.save()
@@ -98,6 +96,5 @@ class InvoiceTestCase(test.TestCase):
         self.assertEquals(counter['n_emits'], 1)
 
         # invoice confirmed on creation should emit the signal too
-        self._create_invoice(confirmed = True)
+        self._create_invoice(confirmed=True)
         self.assertEquals(counter['n_emits'], 2)
-

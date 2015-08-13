@@ -1,11 +1,13 @@
 from decimal import Decimal
 
-from invoices.models import Invoice, Item, LineItemType, LineItemGroup, LineItem
+from invoices.models import Invoice, Item, LineItemType, LineItemGroup, \
+    LineItem
+
 
 def create_invoice(begins=None, ends=None, currency='EUR', due_date=None,
                    is_paid=False, name='', company='', address1='',
                    address2='', city='', zip_code='', country='', vat=19,
-                   credit=Decimal("0.0"), credit_reason=None, items=[], 
+                   credit=Decimal('0.0'), credit_reason=None, items=[],
                    user=None, confirmed=True):
     """
     Create a new invoice
@@ -15,18 +17,18 @@ def create_invoice(begins=None, ends=None, currency='EUR', due_date=None,
         begins=begins, ends=ends, currency=currency, due_date=due_date,
         is_paid=is_paid, name=name, company=company, address1=address1,
         address2=address2, city=city, zip_code=zip_code, country=country,
-        vat=vat, credit=credit, credit_reason=credit_reason or "", 
+        vat=vat, credit=credit, credit_reason=credit_reason or '',
         user=user, confirmed=confirmed)
 
     for item in items:
         i = Item.objects.create(invoice=invoice, name=item.get('name', ''))
         for item_type, description, line_items in item['lineItemGroups']:
-	        line_item_type, created = LineItemType.objects.get_or_create(
+            line_item_type, created = LineItemType.objects.get_or_create(
                 identifier=item_type)
-	        line_item_group = LineItemGroup.objects.create(
+            line_item_group = LineItemGroup.objects.create(
                 item=i, item_type=line_item_type, description=description)
-	        for description, amount, date in line_items:
-	            LineItem.objects.create(item=i, item_group=line_item_group,
+            for description, amount, date in line_items:
+                LineItem.objects.create(item=i, item_group=line_item_group,
                                         description=description, amount=amount,
                                         date=date)
 
@@ -54,6 +56,7 @@ def cancel_invoice(invoice):
         city=invoice.city,
         zip_code=invoice.zip_code,
         country=invoice.country,
-        confirmed=invoice.confirmed
+        confirmed=invoice.confirmed,
+        vat=invoice.vat
     )
     return cancelled_invoice.calculate()
