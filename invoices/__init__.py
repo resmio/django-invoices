@@ -3,6 +3,7 @@ from decimal import Decimal
 from invoices.models import Invoice, Item, LineItemType, LineItemGroup, \
     LineItem
 
+default_app_config = 'invoices.apps.InvoicesConfig'
 
 def create_invoice(begins=None, ends=None, currency='EUR', due_date=None,
                    is_paid=False, name='', company='', address1='',
