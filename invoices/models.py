@@ -11,7 +11,16 @@ from django.core.urlresolvers import reverse
 from invoices.signals import invoice_ready, invoice_confirmed
 
 
-class InvoiceSequenceNumber(models.Model):
+class InvoicesBaseModel(models.Model):
+    class Meta:
+        abstract = True
+
+        # Django 1.9(+?) requires an app_label if you want to access models
+        # before the app is fully initialized.
+        app_label = 'invoices'
+
+
+class InvoiceSequenceNumber(InvoicesBaseModel):
     """
     Invoice sequence number used internally by the Invoice class
     to get consecutive sequential numbers for confirmed invoices
@@ -19,7 +28,7 @@ class InvoiceSequenceNumber(models.Model):
     """
 
 
-class Invoice(models.Model):
+class Invoice(InvoicesBaseModel):
     """
     Invoice
 
@@ -170,11 +179,11 @@ class Invoice(models.Model):
             invoice_confirmed.send(sender=self, invoice=self)
         return ret
 
-    class Meta:
+    class Meta(InvoicesBaseModel.Meta):
         ordering = ['-begins', '-ends', ]
 
 
-class Item(models.Model):
+class Item(InvoicesBaseModel):
     """
     Item
 
@@ -190,7 +199,7 @@ class Item(models.Model):
         return u'%d:%s' % (self.pk, self.name)
 
 
-class LineItemType(models.Model):
+class LineItemType(InvoicesBaseModel):
     """
     Line item type
 
@@ -203,7 +212,7 @@ class LineItemType(models.Model):
         return u'%d:%s' % (self.pk, self.identifier)
 
 
-class LineItemGroup(models.Model):
+class LineItemGroup(InvoicesBaseModel):
     """
     Line item group
 
@@ -220,7 +229,7 @@ class LineItemGroup(models.Model):
         return u'%d:%s: %s' % (self.pk, self.item, self.item_type)
 
 
-class LineItem(models.Model):
+class LineItem(InvoicesBaseModel):
     """
     Line item
 
