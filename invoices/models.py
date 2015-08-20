@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
+RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL', User)
+
 
 class InvoiceSequenceNumber(models.Model):
     """
@@ -28,6 +30,7 @@ class Invoice(models.Model):
                              blank=True,
                              null=True,
                              related_name='invoices')
+    owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True)
     created = models.DateTimeField(verbose_name=_('Created'),
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_('Updated'),
