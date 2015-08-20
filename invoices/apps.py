@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
+
 class InvoicesConfig(AppConfig):
     name = 'invoices'
-    verbose_name = "Django Invoices"
+    verbose_name = 'Django Invoices'
