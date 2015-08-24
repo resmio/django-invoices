@@ -40,7 +40,8 @@ class Invoice(InvoicesBaseModel):
                              blank=True,
                              null=True,
                              related_name='invoices')
-    owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True)
+    owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True,
+                              related_name='invoices')
     created = models.DateTimeField(verbose_name=_('Created'),
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_('Updated'),
