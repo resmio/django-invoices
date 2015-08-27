@@ -148,3 +148,5 @@ LOGGING = {
         },
     }
 }
+
+INVOICES_RELATED_MODEL = 'auth.User'
