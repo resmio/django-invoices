@@ -9,7 +9,6 @@ related_model = getattr(settings, 'INVOICES_RELATED_MODEL', 'auth.User')
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bookoya', '0022_auto_20150720_2102'),
         ('invoices', '0001_initial'),
     ]
 
