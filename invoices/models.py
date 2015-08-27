@@ -38,8 +38,7 @@ class Invoice(InvoicesBaseModel):
     """
     user = models.ForeignKey(User,
                              blank=True,
-                             null=True,
-                             related_name='invoices')
+                             null=True)
     owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True,
                               related_name='invoices')
     created = models.DateTimeField(verbose_name=_('Created'),
