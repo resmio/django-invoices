@@ -45,6 +45,7 @@ def cancel_invoice(invoice):
     """
     cancelled_invoice = Invoice.objects.create(
         cancels=invoice,
+        owner=invoice.owner,
         user=invoice.user,
         begins=invoice.begins,
         ends=invoice.ends,
