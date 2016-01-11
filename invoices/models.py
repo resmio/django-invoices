@@ -20,11 +20,11 @@ STATUS_DUNNING_1 = 3
 STATUS_DUNNING_2 = 4
 
 STATUS_CHOICES = (
-    (STATUS_UNCONFIRMED, "Unconfirmed"),
-    (STATUS_CONFIRMED, "Confirmed"),
-    (STATUS_PAYMENT_REMINDER, "Payment reminder"),
-    (STATUS_DUNNING_1, "Dunning 1"),
-    (STATUS_DUNNING_2, "Dunning 2"),
+    (STATUS_UNCONFIRMED, 'Unconfirmed'),
+    (STATUS_CONFIRMED, 'Confirmed'),
+    (STATUS_PAYMENT_REMINDER, 'Payment reminder'),
+    (STATUS_DUNNING_1, 'Dunning 1'),
+    (STATUS_DUNNING_2, 'Dunning 2'),
 )
 
 
