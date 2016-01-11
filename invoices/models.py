@@ -19,6 +19,14 @@ STATUS_PAYMENT_REMINDER = 2
 STATUS_DUNNING_1 = 3
 STATUS_DUNNING_2 = 4
 
+STATUS_CHOICES = (
+    (STATUS_UNCONFIRMED, "Unconfirmed"),
+    (STATUS_CONFIRMED, "Confirmed"),
+    (STATUS_PAYMENT_REMINDER, "Payment reminder"),
+    (STATUS_DUNNING_1, "Dunning 1"),
+    (STATUS_DUNNING_2, "Dunning 2"),
+)
+
 
 class InvoicesBaseModel(models.Model):
     class Meta:
@@ -113,6 +121,7 @@ class Invoice(InvoicesBaseModel):
                                    related_name='cancelled_by')
     confirmed = models.BooleanField(default=True)
     status = models.PositiveIntegerField(default=STATUS_UNCONFIRMED,
+                                         choices=STATUS_CHOICES,
                                          db_index=True)
     status_updated = models.DateTimeField(auto_now_add=True)
     sequence_number = models.PositiveIntegerField(null=True)
