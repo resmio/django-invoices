@@ -13,6 +13,11 @@ from invoices.signals import invoice_ready, invoice_confirmed
 
 RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL', User)
 
+STATUS_UNCONFIRMED = 0
+STATUS_CONFIRMED = 1
+STATUS_PAYMENT_REMINDER = 2
+STATUS_DUNNING_1 = 3
+STATUS_DUNNING_2 = 4
 
 class InvoicesBaseModel(models.Model):
     class Meta:
@@ -106,6 +111,9 @@ class Invoice(InvoicesBaseModel):
                                    null=True,
                                    related_name='cancelled_by')
     confirmed = models.BooleanField(default=True)
+    status = models.PositiveIntegerField(default=STATUS_UNCONFIRMED,
+                                         db_index=True)
+    status_updated = models.DateTimeField(auto_now_add=True)
     sequence_number = models.PositiveIntegerField(null=True)
 
     @property
