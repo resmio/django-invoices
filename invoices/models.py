@@ -19,6 +19,7 @@ STATUS_PAYMENT_REMINDER = 2
 STATUS_DUNNING_1 = 3
 STATUS_DUNNING_2 = 4
 
+
 class InvoicesBaseModel(models.Model):
     class Meta:
         abstract = True
