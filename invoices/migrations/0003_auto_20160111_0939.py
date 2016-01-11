@@ -24,14 +24,4 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(default=datetime.datetime(2016, 1, 11, 9, 39, 5, 1627), auto_now_add=True),
             preserve_default=False,
         ),
-        migrations.AlterField(
-            model_name='invoice',
-            name='owner',
-            field=models.ForeignKey(related_name='invoices', blank=True, to=settings.AUTH_USER_MODEL, null=True),
-        ),
-        migrations.AlterField(
-            model_name='invoice',
-            name='user',
-            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
-        ),
     ]
