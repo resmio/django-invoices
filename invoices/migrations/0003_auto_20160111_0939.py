@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
-from django.utils.timezone import utc
 from django.conf import settings
 
 
@@ -22,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='status_updated',
-            field=models.DateTimeField(default=datetime.datetime(2016, 1, 11, 15, 27, 13, 898828, tzinfo=utc), auto_now_add=True),
+            field=models.DateTimeField(default=datetime.datetime(2016, 1, 11, 9, 39, 5, 1627), auto_now_add=True),
             preserve_default=False,
         ),
         migrations.AlterField(
