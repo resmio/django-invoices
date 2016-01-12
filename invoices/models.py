@@ -123,7 +123,9 @@ class Invoice(InvoicesBaseModel):
     status = models.PositiveIntegerField(default=STATUS_UNCONFIRMED,
                                          choices=STATUS_CHOICES,
                                          db_index=True)
-    status_updated = models.DateTimeField(auto_now_add=True)
+    payment_reminder_date = models.DateField(null=True)
+    dunning_1_date = models.DateField(null=True)
+    dunning_2_date = models.DateField(null=True)
     sequence_number = models.PositiveIntegerField(null=True)
 
     @property
