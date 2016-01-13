@@ -4,6 +4,7 @@ import os
 
 import django
 from django.conf import settings
+from django.test.utils import get_runner
 
 
 if not settings.configured:
@@ -45,9 +46,6 @@ if not settings.configured:
         ROOT_URLCONF='invoices.urls',
         MIDDLEWARE_CLASSES=('django.middleware.csrf.CsrfViewMiddleware', )
     )
-
-
-from django.test.utils import get_runner
 
 
 def run_tests():
