@@ -13,15 +13,13 @@ from invoices.signals import invoice_ready, invoice_confirmed
 
 RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL', User)
 
-STATUS_UNCONFIRMED = 0
-STATUS_CONFIRMED = 1
-STATUS_PAYMENT_REMINDER = 2
-STATUS_DUNNING_1 = 3
-STATUS_DUNNING_2 = 4
+STATUS_INVOICE = 0
+STATUS_PAYMENT_REMINDER = 1
+STATUS_DUNNING_1 = 2
+STATUS_DUNNING_2 = 3
 
 STATUS_CHOICES = (
-    (STATUS_UNCONFIRMED, 'Unconfirmed'),
-    (STATUS_CONFIRMED, 'Confirmed'),
+    (STATUS_INVOICE, 'Invoice'),
     (STATUS_PAYMENT_REMINDER, 'Payment reminder'),
     (STATUS_DUNNING_1, 'Dunning 1'),
     (STATUS_DUNNING_2, 'Dunning 2'),
@@ -120,7 +118,7 @@ class Invoice(InvoicesBaseModel):
                                    null=True,
                                    related_name='cancelled_by')
     confirmed = models.BooleanField(default=True)
-    status = models.PositiveIntegerField(default=STATUS_UNCONFIRMED,
+    status = models.PositiveIntegerField(default=STATUS_INVOICE,
                                          choices=STATUS_CHOICES,
                                          db_index=True)
     payment_reminder_date = models.DateField(null=True)
