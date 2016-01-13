@@ -32,14 +32,4 @@ class Migration(migrations.Migration):
             name='status',
             field=models.PositiveIntegerField(default=0, db_index=True, choices=[(0, b'Invoice'), (1, b'Payment reminder'), (2, b'Dunning 1'), (3, b'Dunning 2')]),
         ),
-        migrations.AlterField(
-            model_name='invoice',
-            name='owner',
-            field=models.ForeignKey(related_name='invoices', blank=True, to=settings.AUTH_USER_MODEL, null=True),
-        ),
-        migrations.AlterField(
-            model_name='invoice',
-            name='user',
-            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
-        ),
     ]
