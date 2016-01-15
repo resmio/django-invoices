@@ -10,7 +10,8 @@ from invoices import cancel_invoice
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('user', 'begins', 'ends', 'is_paid')
+        fields = ('user', 'begins', 'ends', 'is_paid', 'status',
+                  'payment_reminder_date', 'dunning_1_date', 'dunning_2_date')
 
 
 class InvoiceAdmin(admin.ModelAdmin):
