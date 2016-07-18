@@ -153,7 +153,7 @@ class Invoice(InvoicesBaseModel):
                         description=item_group.description)
             self.amount += self.credit
 
-            # for cancelleations set both invoices to status paid
+            # for cancellations set both invoices to status paid
             self.cancels.is_paid = True
             self.cancels.save()
             self.is_paid = True
