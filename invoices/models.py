@@ -13,10 +13,12 @@ from invoices.signals import invoice_ready, invoice_confirmed
 try:
     RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
                             settings.AUTH_USER_MODEL)
+    USER_MODEL = settings.AUTH_USER_MODEL
 except AttributeError:
     # Django 1.4 compatibility
     from django.contrib.auth.models import User
     RELATED_MODEL = User
+    USER_MODEL = User
 
 STATUS_INVOICE = 0
 STATUS_PAYMENT_REMINDER = 1
@@ -53,7 +55,7 @@ class Invoice(InvoicesBaseModel):
     Invoice
 
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(USER_MODEL,
                              blank=True,
                              null=True)
     owner = models.ForeignKey(RELATED_MODEL,
