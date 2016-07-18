@@ -122,9 +122,21 @@ class Invoice(InvoicesBaseModel):
                                          choices=STATUS_CHOICES,
                                          db_index=True)
     payment_reminder_date = models.DateField(null=True, blank=True)
-    dunning_1_date = models.DateField(null=True, blank=True)
-    dunning_2_date = models.DateField(null=True, blank=True)
-    sequence_number = models.PositiveIntegerField(null=True)
+    dunning_1_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Payment reminder 1 date'))
+    dunning_2_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Payment reminder 2 date'))
+    sequence_number = models.PositiveIntegerField(
+        null=True,
+        verbose_name=_('Sequence number'))
+    paid_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Paid date'))
 
     @property
     def number(self):
