@@ -14,7 +14,7 @@ setup(
     description='Invoices for multimetered billing',
     author='Niels Sandholt Busch',
     author_email='niels.busch@gmail.com',
-    url='https://bitbucket.org/resmio/django-invoices/',
+    url='https://github.com/resmio/django-invoices/',
     long_description=open('README', 'r').read(),
     packages=[
         'invoices',
