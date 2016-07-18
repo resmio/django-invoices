@@ -4,14 +4,14 @@ from datetime import date
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
-RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL', User)
+RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
+                        settings.AUTH_USER_MODEL)
 
 STATUS_INVOICE = 0
 STATUS_PAYMENT_REMINDER = 1
@@ -48,10 +48,12 @@ class Invoice(InvoicesBaseModel):
     Invoice
 
     """
-    user = models.ForeignKey(User,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              blank=True,
                              null=True)
-    owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True,
+    owner = models.ForeignKey(RELATED_MODEL,
+                              blank=True,
+                              null=True,
                               related_name='invoices')
     created = models.DateTimeField(verbose_name=_('Created'),
                                    auto_now_add=True)
