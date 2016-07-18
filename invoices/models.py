@@ -10,8 +10,13 @@ from django.conf import settings
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
-RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
-                        settings.AUTH_USER_MODEL)
+try:
+    RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
+                            settings.AUTH_USER_MODEL)
+except AttributeError:
+    # Django 1.4 compatibility
+    from django.contrib.auth.models import User
+    RELATED_MODEL = User
 
 STATUS_INVOICE = 0
 STATUS_PAYMENT_REMINDER = 1
