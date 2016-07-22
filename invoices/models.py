@@ -4,14 +4,21 @@ from datetime import date
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
-RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL', User)
+try:
+    RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
+                            settings.AUTH_USER_MODEL)
+    USER_MODEL = settings.AUTH_USER_MODEL
+except AttributeError:
+    # Django 1.4 compatibility
+    from django.contrib.auth.models import User
+    RELATED_MODEL = User
+    USER_MODEL = User
 
 STATUS_INVOICE = 0
 STATUS_PAYMENT_REMINDER = 1
@@ -48,10 +55,12 @@ class Invoice(InvoicesBaseModel):
     Invoice
 
     """
-    user = models.ForeignKey(User,
+    user = models.ForeignKey(USER_MODEL,
                              blank=True,
                              null=True)
-    owner = models.ForeignKey(RELATED_MODEL, blank=True, null=True,
+    owner = models.ForeignKey(RELATED_MODEL,
+                              blank=True,
+                              null=True,
                               related_name='invoices')
     created = models.DateTimeField(verbose_name=_('Created'),
                                    auto_now_add=True)
@@ -122,9 +131,21 @@ class Invoice(InvoicesBaseModel):
                                          choices=STATUS_CHOICES,
                                          db_index=True)
     payment_reminder_date = models.DateField(null=True, blank=True)
-    dunning_1_date = models.DateField(null=True, blank=True)
-    dunning_2_date = models.DateField(null=True, blank=True)
-    sequence_number = models.PositiveIntegerField(null=True)
+    dunning_1_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Payment reminder 1 date'))
+    dunning_2_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Payment reminder 2 date'))
+    sequence_number = models.PositiveIntegerField(
+        null=True,
+        verbose_name=_('Sequence number'))
+    paid_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Paid date'))
 
     @property
     def number(self):
@@ -153,7 +174,7 @@ class Invoice(InvoicesBaseModel):
                         description=item_group.description)
             self.amount += self.credit
 
-            # for cancelleations set both invoices to status paid
+            # for cancellations set both invoices to status paid
             self.cancels.is_paid = True
             self.cancels.save()
             self.is_paid = True
