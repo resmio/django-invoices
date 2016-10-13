@@ -76,6 +76,8 @@ class Invoice(InvoicesBaseModel):
                                 blank=True)
     is_paid = models.BooleanField(verbose_name=_('Is paid'),
                                   default=False)
+    written_off = models.BooleanField(verbose_name=_('Written Off'),
+                                      default=False)
     currency = models.CharField(max_length=3,
                                 default='EUR')
     name = models.CharField(max_length=512,
