@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+related_model = getattr(settings, 'INVOICES_RELATED_MODEL', 'auth.User')
 
 class Migration(migrations.Migration):
 
@@ -32,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='owner',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=related_model),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -47,6 +48,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=related_model),
         ),
     ]
