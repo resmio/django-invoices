@@ -55,7 +55,7 @@ class Invoice(InvoicesBaseModel):
     Invoice
 
     """
-    user = models.ForeignKey(USER_MODEL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              blank=True,
                              null=True)
     owner = models.ForeignKey(RELATED_MODEL,
