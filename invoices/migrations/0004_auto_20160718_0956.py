@@ -55,4 +55,3 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
     ]
-
