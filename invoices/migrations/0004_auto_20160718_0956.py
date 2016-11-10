@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='owner',
-        field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=related_model),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=related_model),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -55,3 +55,4 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
     ]
+
