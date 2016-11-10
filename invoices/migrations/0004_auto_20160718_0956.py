@@ -5,7 +5,15 @@ from django.db import migrations, models
 from django.conf import settings
 import django.db.models.deletion
 
-related_model = getattr(settings, 'INVOICES_RELATED_MODEL', 'auth.User')
+try:
+    RELATED_MODEL = getattr(settings, 'INVOICES_RELATED_MODEL',
+                            settings.AUTH_USER_MODEL)
+    USER_MODEL = settings.AUTH_USER_MODEL
+except AttributeError:
+    # Django 1.4 compatibility
+    from django.contrib.auth.models import User
+    RELATED_MODEL = User
+    USER_MODEL = User
 
 class Migration(migrations.Migration):
 
@@ -37,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='owner',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=related_model),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='invoices', to=RELATED_MODEL),
         ),
         migrations.AlterField(
             model_name='invoice',
@@ -52,6 +60,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='user',
-            field=models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(blank=True, to=USER_MODEL, null=True),
         ),
     ]
