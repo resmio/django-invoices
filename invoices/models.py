@@ -71,6 +71,8 @@ class Invoice(InvoicesBaseModel):
     invoicing_date = models.DateField(verbose_name=_('Invoicing Date'),
                                       null=True,
                                       blank=True)
+    begin_service_cycle = models.DateField(null=True, blank=True)
+    end_service_cycle = models.DateField(null=True, blank=True)
     due_date = models.DateField(verbose_name=_('Due date'),
                                 null=True,
                                 blank=True)
