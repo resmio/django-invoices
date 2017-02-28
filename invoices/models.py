@@ -24,12 +24,14 @@ STATUS_INVOICE = 0
 STATUS_PAYMENT_REMINDER = 1
 STATUS_DUNNING_1 = 2
 STATUS_DUNNING_2 = 3
+STATUS_COLLECTION = 4
 
 STATUS_CHOICES = (
     (STATUS_INVOICE, 'Invoice'),
     (STATUS_PAYMENT_REMINDER, 'Payment reminder'),
     (STATUS_DUNNING_1, 'Dunning 1'),
     (STATUS_DUNNING_2, 'Dunning 2'),
+    (STATUS_COLLECTION, 'Collection'),
 )
 
 
@@ -143,6 +145,10 @@ class Invoice(InvoicesBaseModel):
         null=True,
         blank=True,
         verbose_name=_('Payment reminder 2 date'))
+    collection = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Collection handover date'))
     sequence_number = models.PositiveIntegerField(
         null=True,
         verbose_name=_('Sequence number'))
