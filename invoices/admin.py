@@ -11,7 +11,8 @@ class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = ('user', 'begins', 'ends', 'is_paid', 'status',
-                  'payment_reminder_date', 'dunning_1_date', 'dunning_2_date')
+                  'payment_reminder_date', 'dunning_1_date', 'dunning_2_date',
+                  'collection')
 
 
 class InvoiceAdmin(admin.ModelAdmin):
