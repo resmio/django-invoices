@@ -1,4 +1,3 @@
-from __future__ import division
 from decimal import Decimal
 from datetime import date
 
@@ -36,7 +35,7 @@ STATUS_CHOICES = (
 
 
 class InvoicesBaseModel(models.Model):
-    class Meta:
+    class Meta(object):
         abstract = True
 
         # Django 1.9(+?) requires an app_label if you want to access models
@@ -166,8 +165,8 @@ class Invoice(InvoicesBaseModel):
         if not self.confirmed:
             raise Exception('Unconfirmed invoices do not have a number')
         return '%d%s%s' % (self.begins.year,
-                           unicode(self.begins.month).zfill(2),
-                           unicode(self.sequence_number).zfill(4))
+                           str(self.begins.month).zfill(2),
+                           str(self.sequence_number).zfill(4))
 
     def calculate(self, silent=False):
 
