@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='status',
-            field=models.PositiveIntegerField(default=0, db_index=True, choices=[(0, b'Invoice'), (1, b'Payment reminder'), (2, b'Dunning 1'), (3, b'Dunning 2')]),
+            field=models.PositiveIntegerField(default=0, db_index=True, choices=[(0, 'Invoice'), (1, 'Payment reminder'), (2, 'Dunning 1'), (3, 'Dunning 2')]),
         ),
     ]
