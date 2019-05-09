@@ -35,7 +35,7 @@ STATUS_CHOICES = (
 
 
 class InvoicesBaseModel(models.Model):
-    class Meta(object):
+    class Meta:
         abstract = True
 
         # Django 1.9(+?) requires an app_label if you want to access models
