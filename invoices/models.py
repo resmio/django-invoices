@@ -1,4 +1,5 @@
-from __future__ import division
+from __future__ import unicode_literals
+
 from decimal import Decimal
 from datetime import date
 
@@ -7,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
@@ -52,6 +54,7 @@ class InvoiceSequenceNumber(InvoicesBaseModel):
     """
 
 
+@python_2_unicode_compatible
 class Invoice(InvoicesBaseModel):
     """
     Invoice
@@ -166,8 +169,8 @@ class Invoice(InvoicesBaseModel):
         if not self.confirmed:
             raise Exception('Unconfirmed invoices do not have a number')
         return '%d%s%s' % (self.begins.year,
-                           unicode(self.begins.month).zfill(2),
-                           unicode(self.sequence_number).zfill(4))
+                           str(self.begins.month).zfill(2),
+                           str(self.sequence_number).zfill(4))
 
     def calculate(self, silent=False):
 
@@ -216,7 +219,7 @@ class Invoice(InvoicesBaseModel):
     def get_absolute_url(self):
         return reverse('invoice_detail', kwargs={'pk': self.pk})
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s, %s - %s' % (self.user, self.begins, self.ends)
 
     def save(self, *args, **kwargs):
@@ -236,6 +239,7 @@ class Invoice(InvoicesBaseModel):
         ordering = ['-begins', '-ends', ]
 
 
+@python_2_unicode_compatible
 class Item(InvoicesBaseModel):
     """
     Item
@@ -248,10 +252,11 @@ class Item(InvoicesBaseModel):
                                        verbose_name=_('Total amount'),
                                        default=Decimal('0.0'))
 
-    def __unicode__(self):
-        return u'%d:%s' % (self.pk, self.name)
+    def __str__(self):
+        return '%d:%s' % (self.pk, self.name)
 
 
+@python_2_unicode_compatible
 class LineItemType(InvoicesBaseModel):
     """
     Line item type
@@ -261,10 +266,11 @@ class LineItemType(InvoicesBaseModel):
     name = models.CharField(max_length=256, blank=True)
     description = models.CharField(max_length=512, blank=True)
 
-    def __unicode__(self):
-        return u'%d:%s' % (self.pk, self.identifier)
+    def __str__(self):
+        return '%d:%s' % (self.pk, self.identifier)
 
 
+@python_2_unicode_compatible
 class LineItemGroup(InvoicesBaseModel):
     """
     Line item group
@@ -278,10 +284,11 @@ class LineItemGroup(InvoicesBaseModel):
                                  default=Decimal('0.0'))
     description = models.CharField(max_length=256, blank=True)
 
-    def __unicode__(self):
-        return u'%d:%s: %s' % (self.pk, self.item, self.item_type)
+    def __str__(self):
+        return '%d:%s: %s' % (self.pk, self.item, self.item_type)
 
 
+@python_2_unicode_compatible
 class LineItem(InvoicesBaseModel):
     """
     Line item
@@ -299,5 +306,5 @@ class LineItem(InvoicesBaseModel):
     date = models.DateTimeField(verbose_name=_('Date'))
     timezone = models.CharField(default='UTC', max_length=128)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%d:%s' % (self.pk, self.description)
