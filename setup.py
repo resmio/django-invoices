@@ -10,10 +10,10 @@ except ImportError:
 
 setup(
     name='django-invoices',
-    version='0.1.0',
+    version='1.0.0',
     description='Invoices for multimetered billing',
-    author='Niels Sandholt Busch',
-    author_email='niels.busch@gmail.com',
+    author='resmio GmbH',
+    author_email='support@resmio.com',
     url='https://github.com/resmio/django-invoices/',
     long_description=open('README', 'r').read(),
     packages=[
