@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='invoice',
             name='owner',
-            field=models.ForeignKey(blank=True,
+            field=models.ForeignKey(on_delete=models.CASCADE,
+                                    blank=True,
                                     to=related_model,
                                     null=True),
             preserve_default=True,

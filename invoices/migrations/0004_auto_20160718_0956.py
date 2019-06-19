@@ -60,6 +60,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='user',
-            field=models.ForeignKey(blank=True, to=USER_MODEL, null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, blank=True, to=USER_MODEL, null=True),
         ),
     ]

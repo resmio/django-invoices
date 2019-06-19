@@ -40,8 +40,8 @@ class Migration(migrations.Migration):
                 ('vat', models.PositiveIntegerField(default=19, verbose_name='VAT')),
                 ('confirmed', models.BooleanField(default=True)),
                 ('sequence_number', models.PositiveIntegerField(null=True)),
-                ('cancels', models.OneToOneField(related_name='cancelled_by', null=True, blank=True, to='invoices.Invoice')),
-                ('user', models.ForeignKey(related_name='invoices', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('cancels', models.OneToOneField(on_delete=models.CASCADE, related_name='cancelled_by', null=True, blank=True, to='invoices.Invoice')),
+                ('user', models.ForeignKey(on_delete=models.CASCADE, related_name='invoices', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ['-begins', '-ends'],
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=256, verbose_name='Name')),
                 ('total_amount', models.DecimalField(default=Decimal('0.0'), verbose_name='Total amount', max_digits=7, decimal_places=2)),
-                ('invoice', models.ForeignKey(related_name='items', to='invoices.Invoice')),
+                ('invoice', models.ForeignKey(on_delete=models.CASCADE, related_name='items', to='invoices.Invoice')),
             ],
             options={
             },
@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
                 ('amount', models.DecimalField(verbose_name='Amount', max_digits=7, decimal_places=2)),
                 ('date', models.DateTimeField(verbose_name='Date')),
                 ('timezone', models.CharField(default='UTC', max_length=128)),
-                ('item', models.ForeignKey(related_name='line_items', to='invoices.Item')),
+                ('item', models.ForeignKey(on_delete=models.CASCADE, related_name='line_items', to='invoices.Item')),
             ],
             options={
             },
@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('amount', models.DecimalField(default=Decimal('0.0'), verbose_name='Amount', max_digits=7, decimal_places=2)),
                 ('description', models.CharField(max_length=256, blank=True)),
-                ('item', models.ForeignKey(related_name='line_item_groups', to='invoices.Item')),
+                ('item', models.ForeignKey(on_delete=models.CASCADE, related_name='line_item_groups', to='invoices.Item')),
             ],
             options={
             },
@@ -110,13 +110,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lineitemgroup',
             name='item_type',
-            field=models.ForeignKey(related_name='line_item_groups', to='invoices.LineItemType'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='line_item_groups', to='invoices.LineItemType'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='lineitem',
             name='item_group',
-            field=models.ForeignKey(related_name='line_items', to='invoices.LineItemGroup', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='line_items', to='invoices.LineItemGroup', null=True),
             preserve_default=True,
         ),
     ]
