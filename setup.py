@@ -20,7 +20,7 @@ setup(
         'invoices',
     ],
     requires=[
-        'django(>=1.4)',
+        'django(>=2.0)',
     ],
     install_requires=[
     ],

@@ -1,12 +1,10 @@
-from __future__ import unicode_literals
-
 from decimal import Decimal
 from datetime import date
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -62,11 +60,13 @@ class Invoice(InvoicesBaseModel):
     """
     user = models.ForeignKey(USER_MODEL,
                              blank=True,
-                             null=True)
+                             null=True,
+                             on_delete=models.SET_NULL)
     owner = models.ForeignKey(RELATED_MODEL,
                               blank=True,
                               null=True,
-                              related_name='invoices')
+                              related_name='invoices',
+                              on_delete=models.SET_NULL)
     created = models.DateTimeField(verbose_name=_('Created'),
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_('Updated'),
@@ -134,7 +134,8 @@ class Invoice(InvoicesBaseModel):
     cancels = models.OneToOneField('Invoice',
                                    blank=True,
                                    null=True,
-                                   related_name='cancelled_by')
+                                   related_name='cancelled_by',
+                                   on_delete=models.SET_NULL)
     confirmed = models.BooleanField(default=True)
     status = models.PositiveIntegerField(default=STATUS_INVOICE,
                                          choices=STATUS_CHOICES,
@@ -245,7 +246,7 @@ class Item(InvoicesBaseModel):
     Item
 
     """
-    invoice = models.ForeignKey(Invoice, related_name='items')
+    invoice = models.ForeignKey(Invoice, related_name='items', on_delete=models.CASCADE)
     name = models.CharField(max_length=256, verbose_name=_('Name'))
     total_amount = models.DecimalField(max_digits=7,
                                        decimal_places=2,
@@ -276,9 +277,10 @@ class LineItemGroup(InvoicesBaseModel):
     Line item group
 
     """
-    item = models.ForeignKey(Item, related_name='line_item_groups')
+    item = models.ForeignKey(Item, related_name='line_item_groups', on_delete=models.CASCADE)
     item_type = models.ForeignKey(LineItemType,
-                                  related_name='line_item_groups')
+                                  related_name='line_item_groups',
+                                  on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=7, decimal_places=2,
                                  verbose_name=_('Amount'),
                                  default=Decimal('0.0'))
@@ -294,10 +296,11 @@ class LineItem(InvoicesBaseModel):
     Line item
 
     """
-    item = models.ForeignKey(Item, related_name='line_items')
+    item = models.ForeignKey(Item, related_name='line_items', on_delete=models.CASCADE)
     item_group = models.ForeignKey(LineItemGroup,
                                    related_name='line_items',
-                                   null=True)
+                                   null=True,
+                                   on_delete=models.SET_NULL)
     description = models.CharField(max_length=512,
                                    verbose_name=_('Description'))
     amount = models.DecimalField(max_digits=7,
