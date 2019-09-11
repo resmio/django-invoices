@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+related_model = getattr(settings, 'INVOICES_RELATED_MODEL', 'auth.User')
+
 
 class Migration(migrations.Migration):
 
@@ -20,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='owner',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='invoices', to='bookoya.Facility'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='invoices', to=related_model),
         ),
         migrations.AlterField(
             model_name='invoice',
