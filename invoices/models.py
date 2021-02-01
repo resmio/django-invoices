@@ -161,6 +161,8 @@ class Invoice(InvoicesBaseModel):
         blank=True,
         verbose_name=_('Paid date'))
 
+    is_archived = models.BooleanField(default=False)
+
     @property
     def number(self):
         """
