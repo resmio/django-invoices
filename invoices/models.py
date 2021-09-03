@@ -311,5 +311,7 @@ class LineItem(InvoicesBaseModel):
     date = models.DateTimeField(verbose_name=_('Date'))
     timezone = models.CharField(default='UTC', max_length=128)
 
+    product_identifier = models.CharField(max_length=256, blank=True, null=True)
+
     def __str__(self):
         return '%d:%s' % (self.pk, self.description)
