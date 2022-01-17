@@ -2,11 +2,10 @@ from decimal import Decimal
 from datetime import date
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Sum
 from django.urls import reverse
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 
 from invoices.signals import invoice_ready, invoice_confirmed
 
@@ -52,7 +51,6 @@ class InvoiceSequenceNumber(InvoicesBaseModel):
     """
 
 
-@python_2_unicode_compatible
 class Invoice(InvoicesBaseModel):
     """
     Invoice
@@ -242,7 +240,6 @@ class Invoice(InvoicesBaseModel):
         ordering = ['-begins', '-ends', ]
 
 
-@python_2_unicode_compatible
 class Item(InvoicesBaseModel):
     """
     Item
@@ -259,7 +256,6 @@ class Item(InvoicesBaseModel):
         return '%d:%s' % (self.pk, self.name)
 
 
-@python_2_unicode_compatible
 class LineItemType(InvoicesBaseModel):
     """
     Line item type
@@ -273,7 +269,6 @@ class LineItemType(InvoicesBaseModel):
         return '%d:%s' % (self.pk, self.identifier)
 
 
-@python_2_unicode_compatible
 class LineItemGroup(InvoicesBaseModel):
     """
     Line item group
@@ -292,7 +287,6 @@ class LineItemGroup(InvoicesBaseModel):
         return '%d:%s: %s' % (self.pk, self.item, self.item_type)
 
 
-@python_2_unicode_compatible
 class LineItem(InvoicesBaseModel):
     """
     Line item
