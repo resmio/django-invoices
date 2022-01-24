@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from django.utils.translation import ugettext, ungettext, ugettext_lazy as _
+from django.utils.translation import gettext, ngettext, gettext_lazy as _
 from django.contrib import messages
 
 from invoices.models import Invoice
@@ -25,7 +25,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
     def cancel_invoices(self, request, queryset):
         if queryset.filter(confirmed=False).count():
-            message = ugettext('Unconfirmed invoices cannot be cancelled, '
+            message = gettext('Unconfirmed invoices cannot be cancelled, '
                                'you can just delete them')
             messages.error(request, message)
             return
@@ -33,7 +33,7 @@ class InvoiceAdmin(admin.ModelAdmin):
         for invoice in queryset:
             cancel_invoice(invoice)
 
-        message = ungettext(
+        message = ngettext(
             'successfully cancelled %(count)d invoice',
             'successfully cancelled %(count)d invoices',
             queryset.count()) % {'count': queryset.count()}
@@ -48,7 +48,7 @@ class InvoiceAdmin(admin.ModelAdmin):
                 invoice.save()
                 count += 1
 
-        message = ungettext(
+        message = ngettext(
             'successfully confirmed %(count)d invoice',
             'successfully confirmed %(count)d invoices',
             count) % {'count': count}
@@ -57,7 +57,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
     def delete_invoices(self, request, queryset):
         if queryset.filter(confirmed=True).count():
-            message = ugettext(
+            message = gettext(
                 'You cannot delete confirmed invoices, '
                 'create a cancellation instead')
             messages.error(request, message)
@@ -66,7 +66,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
         count = queryset.count()
         queryset.delete()
-        message = ungettext(
+        message = ngettext(
             'successfully deleted %(count)d invoice',
             'successfully deleted %(count)d invoices',
             count) % {'count': count}
