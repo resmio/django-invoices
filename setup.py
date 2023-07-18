@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
-    from setuptools import setup
+    from setuptools import setup, find_packages
 
 setup(
     name='django-invoices',
@@ -16,9 +16,10 @@ setup(
     author_email='support@resmio.com',
     url='https://github.com/resmio/django-invoices/',
     long_description=open('README', 'r').read(),
-    packages=[
-        'invoices',
-    ],
+    packages=find_packages(
+        where='.',
+        exclude=['tests*'],
+    ),
     requires=[
         'django(>=3.0)',
     ],
