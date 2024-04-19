@@ -1,10 +1,10 @@
-from django.contrib import admin
 from django import forms
-from django.utils.translation import gettext, ngettext, gettext_lazy as _
+from django.contrib import admin
 from django.contrib import messages
+from django.utils.translation import gettext, ngettext, gettext_lazy as _
 
-from invoices.models import Invoice
 from invoices import cancel_invoice
+from invoices.models import Invoice
 
 
 class InvoiceForm(forms.ModelForm):
@@ -22,6 +22,7 @@ class InvoiceAdmin(admin.ModelAdmin):
                     'confirmed')
     list_filter = ('is_paid', 'confirmed')
     actions = ['cancel_invoices', 'confirm_invoices', 'delete_invoices']
+    search_fields = ['owner__pk', 'owner__name']
 
     def cancel_invoices(self, request, queryset):
         if queryset.filter(confirmed=False).count():
